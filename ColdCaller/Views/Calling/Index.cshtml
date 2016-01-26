@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Select a Class";
+}
+
+
+
+<form method="post">
+    <fieldset>
+        <legend>
+            Which class would you like to cold call?
+        </legend>
+
+        @Html.DropDownList("StudentClass")
+
+        <div>
+            <label>&nbsp;</label>
+            <input type="submit" value="Submit" class="submit" />
+        </div>
+    </fieldset>
+</form>
+

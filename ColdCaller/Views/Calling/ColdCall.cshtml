@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calling @ViewBag.ChosenClass</title>
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">*@
+
+    @Styles.Render("~/bundles/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <style>
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <div class="container body-content">
+        <div id="CallButton" class="jumbotron noselect">READY!</div>
+        @*<div id="checking">Checking</div>*@
+
+        <script>
+            var StudentsToCall = [];
+
+            function clearField(name){
+                setTimeout(function () {
+                    if ($("#CallButton").text() == name) {
+                        $("#CallButton").html("&nbsp;");
+                        //$("#checking").html(name);
+                    }
+                }, 5000);
+            }
+            function getStudents() {
+
+                $.getJSON("@Url.Action("JsonChosenStudents", "Calling", new { ViewBag.ChosenClass })", function (data) {
+                    var i = 0;
+                    $.each(data, function (key, val) {
+                        StudentsToCall.push(data[key].name);
+                        //alert(StudentsToCall[i]);
+                        i++;
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#CallButton").click(function () {
+                        var i = Math.random() * StudentsToCall.length;
+                        if (i == StudentsToCall.length) { i = 0; }
+                        i = Math.floor(i);
+                        $(this).html(StudentsToCall[i]);
+                        clearField(StudentsToCall[i]);
+                            
+                        
+                    })
+                });
+
+
+            }
+            getStudents();
+        </script>
+
+    </div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ColdCaller.Models.Student>
+
+@{
+    ViewBag.Title = "Verify Class";
+}
+
+<h2>Are these the students you want to call?</h2>
+
+<a href="@Url.Action("ColdCall", "Calling", new { ViewBag.ChosenClass })" onclick="window.open(this.href, 'mywin',
+'left=20,top=20,width=500,height=200,toolbar=1,resizable=0'); return false;">Yes</a>
+
+@Html.ActionLink("No", "Index")
+
+
+<h3>@ViewBag.ChosenClass</h3>
+
+
+    <ol name="ChosenStudents">
+@foreach (var item in Model) {
+   
+            <li>@Html.DisplayFor(modelItem => item.Name)</li>
+   
+}
+    </ol>
+
+
+

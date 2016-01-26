@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Add Students";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Add Students</h2>
+
+        <h3>You can enter students into the field below or upload a comma seperated value document with your students listed.</h3>
+
+        @Html.ActionLink("View and manage your current students here.","List")
+        
+    </div>
+    <hr />
+</div>
+
+<div class="row">
+    <div class="col-med-12 col-lg-6">
+        <form action="/Students/AddFromForm" method="post">
+            <fieldset>
+                
+
+                <p>You can type a list of the students in one of your classes here.  Type the names as you would like them to appear.  Seperate each name with a comma.</p>
+                @Html.TextArea("StudentList", "", 6, 80, null)
+
+                <p>Enter the period or class name for these students.</p>
+                @Html.TextBox("StudentClass")
+
+                <div>
+                    <label>&nbsp;</label>
+                    <input type="submit" value="Create From Form" class="submit" />
+                </div>
+            </fieldset>
+        </form>
+        
+        <hr class="hidden-lg"/>
+    </div>
+
+    <div class="col-med-12 col-lg-6">
+
+        <p>You can upload a csv document with a list of all of your students and the class or period they are in.</p>
+        <p>Put the students' names in the first column as you would like them to appear.  Put their class or period name in the second column.  Do not use a header row.</p>
+        @using (Html.BeginForm("AddFromCSV",
+                        "Students",
+                        FormMethod.Post,
+                        new { enctype = "multipart/form-data" }))
+        {
+            <label for="file">Upload CSV:</label>
+            <input type="file" name="file" id="file" /><br><br>
+            <input type="submit" value="Create From CSV" />
+            <br><br>
+            @ViewBag.Message
+        }
+        
+    </div>
+    
+</div>
+
