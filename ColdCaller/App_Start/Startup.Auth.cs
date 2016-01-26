@@ -54,14 +54,16 @@ namespace ColdCaller
             //   consumerKey: "",
             //   consumerSecret: "");
 
+            //TODO: Set up login in with Facebook and Google
+            //http://www.asp.net/mvc/overview/security/create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on
             app.UseFacebookAuthentication(
-               appId: "569409999879670",
-               appSecret: "920804bf9067f9731af35edc64c9ef1e");
+               appId: "GetYourOwn",
+               appSecret: "GetYourOwn");
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "747643395021-0qc7qsi6k6gndluoflve68n8s6ek9vao.apps.googleusercontent.com",
-                ClientSecret = "A6Ifp_QNxc1ffbx28pWOxYJV"
+                ClientId = "GetYourOwn",
+                ClientSecret = "GetYourOwn"
             });
         }
     }
