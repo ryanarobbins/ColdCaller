@@ -56,12 +56,12 @@ namespace ColdCaller
 
             app.UseFacebookAuthentication(
                appId: "569409999879670",
-               appSecret: "920804bf9067f9731af35edc64c9ef1e");
+               appSecret: "a12747d822370d21c5b16258cad944fe");
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
                 ClientId = "747643395021-0qc7qsi6k6gndluoflve68n8s6ek9vao.apps.googleusercontent.com",
-                ClientSecret = "A6Ifp_QNxc1ffbx28pWOxYJV"
+                ClientSecret = "FL18O4VC4V08LUgfN5_tPw_e"
             });
         }
     }

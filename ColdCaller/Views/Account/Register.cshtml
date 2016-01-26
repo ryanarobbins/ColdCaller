@@ -5,6 +5,8 @@
 
 <h2>@ViewBag.Title.</h2>
 
+@Html.ActionLink("Click Here To Use Your Google or Facebook Account","Login")
+
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
