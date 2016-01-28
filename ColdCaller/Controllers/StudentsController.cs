@@ -79,9 +79,30 @@ namespace ColdCaller.Controllers
             if (file != null && file.ContentLength > 0)
                 try
                 {
-                    string path = Path.Combine(Server.MapPath("~/UploadTests"),
-                                               Path.GetFileName(file.FileName));
-                    file.SaveAs(path);
+                    //string path = Path.Combine(Server.MapPath("~/UploadTests"),
+                    //                           Path.GetFileName(file.FileName));
+                    //file.SaveAs(path);
+
+                    TextReader reader = new StreamReader(file.InputStream);
+
+                    var parsedCSV = new CsvReader(reader);
+
+                    parsedCSV.Configuration.RegisterClassMap<MyClassMap>();
+                    parsedCSV.Configuration.TrimFields = true;
+                    parsedCSV.Configuration.HasHeaderRecord = false;
+
+                    var AddedStudents = parsedCSV.GetRecords<Student>();
+
+                    var TeacherId = User.Identity.GetUserId();
+
+                    foreach (var s in AddedStudents)
+                    {
+                        s.TeacherId = TeacherId;
+                        db.Students.Add(s);
+                        //StudentsToDisplayNames.Add(s.Name);
+                    }
+
+                    db.SaveChanges();
                 }
                 catch (Exception ex)
                 {
@@ -96,27 +117,27 @@ namespace ColdCaller.Controllers
 
             ViewBag.Message = "Success!";
 
-            TextReader reader = new StreamReader(file.InputStream);
+            //TextReader reader = new StreamReader(file.InputStream);
             
-            var parsedCSV = new CsvReader(reader);
+            //var parsedCSV = new CsvReader(reader);
             
-            parsedCSV.Configuration.RegisterClassMap<MyClassMap>();
-            parsedCSV.Configuration.TrimFields = true;
-            parsedCSV.Configuration.HasHeaderRecord = false;
+            //parsedCSV.Configuration.RegisterClassMap<MyClassMap>();
+            //parsedCSV.Configuration.TrimFields = true;
+            //parsedCSV.Configuration.HasHeaderRecord = false;
             
-            var AddedStudents = parsedCSV.GetRecords<Student>();
+            //var AddedStudents = parsedCSV.GetRecords<Student>();
 
             //List<string> StudentsToDisplayNames = new List<string>();
-            var TeacherId = User.Identity.GetUserId();
+            //var TeacherId = User.Identity.GetUserId();
 
-            foreach(var s in AddedStudents)
-            {
-                s.TeacherId = TeacherId;
-                db.Students.Add(s);
-                //StudentsToDisplayNames.Add(s.Name);
-            }
+            //foreach(var s in AddedStudents)
+            //{
+            //    s.TeacherId = TeacherId;
+            //    db.Students.Add(s);
+            //    //StudentsToDisplayNames.Add(s.Name);
+            //}
 
-            db.SaveChanges();
+            //db.SaveChanges();
 
             //Pulls the Students that were just added from the database
             //Will also pull Students with the same Name and TeacherId
