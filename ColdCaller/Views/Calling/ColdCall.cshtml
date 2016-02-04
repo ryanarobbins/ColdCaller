@@ -1,4 +1,11 @@
-﻿@{
+﻿<!--ColdCall.cshtml is reached after chosing yes from the VerifyClass.cshtml page.
+    It should open in a new window with the size set in VerifyClass.
+    The page has a jumbotron element that will initially say "Ready!"
+    When it is clicked, a students name is chosen randomly from a list
+    sent to the browser through JSON and displayed.  The name will disapper
+    after 5 seconds.-->
+@{
+    
     Layout = null;
 }
 
@@ -7,14 +14,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--The class that has been chosen is stored in the viewbag in the controller.-->
     <title>Calling @ViewBag.ChosenClass</title>
-    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
-        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">*@
 
     @Styles.Render("~/bundles/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <!--noselect will be applied to the jumbotron so the names don't get highlighted when clicked.
+        Should be moved to a stylesheet.-->
     <style>
         .noselect {
             -webkit-touch-callout: none;
@@ -25,57 +33,60 @@
             user-select: none;
         }
     </style>
-
-
 </head>
 <body>
 
     <div class="container body-content">
+        <!--Displays the name of a student when clicked.-->
         <div id="CallButton" class="jumbotron noselect">READY!</div>
-        @*<div id="checking">Checking</div>*@
 
+        <!--Move to script file.-->
         <script>
+            //An array of strings storing the names of students.
             var StudentsToCall = [];
 
-            function clearField(name){
+            //Will clear the jumbotron 5s after it is clicked.
+            //May clear sooner if it is clicked rapidly.
+            function clearField(name) {
                 setTimeout(function () {
                     if ($("#CallButton").text() == name) {
                         $("#CallButton").html("&nbsp;");
-                        //$("#checking").html(name);
                     }
                 }, 5000);
             }
+
+            //Makes an AJAX call to the server and receives a JSON response.
+            //The JSON is a list of names.
+            //Puts the names into the StudentsToCall array.
             function getStudents() {
 
+                //The first parameter is the url to send the request to.
+                //The second parameter is the success function that runs when the data is received.
                 $.getJSON("@Url.Action("JsonChosenStudents", "Calling", new { ViewBag.ChosenClass })", function (data) {
-                    var i = 0;
+                    //Data is the JSON data changed from a string to objects (I think).
+                    //Pushes the name from each object in the list to the StudentsToCall array.
+                    //It may be possible to just use data as the list without this new array.
                     $.each(data, function (key, val) {
-                        StudentsToCall.push(data[key].name);
-                        //alert(StudentsToCall[i]);
-                        i++;
+                        StudentsToCall.push(val.name);
                     });
                 });
 
+                //When the jumbotron is clicked, a random name is chosen
+                //and displayed.  The ClearField function is also called.
                 $(document).ready(function () {
                     $("#CallButton").click(function () {
                         var i = Math.random() * StudentsToCall.length;
-                        if (i == StudentsToCall.length) { i = 0; }
+                        if (i == StudentsToCall.length) { i = 0; }      //In case random returns 1
                         i = Math.floor(i);
                         $(this).html(StudentsToCall[i]);
                         clearField(StudentsToCall[i]);
-                            
-                        
                     })
                 });
-
-
             }
+
+            //Get the list of students!
             getStudents();
         </script>
-
     </div>
-
-
-
 </body>
 </html>

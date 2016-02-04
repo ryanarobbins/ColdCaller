@@ -5,14 +5,14 @@
 <div class="jumbotron">
     <h1>Classroom Cold Caller</h1>
     <p class="lead">Classroom Cold Caller lets you randomly choose students to call on in class.</p>
-    
+
 </div>
 
 <div class="row">
     <div class="col-md-4">
         <h2>What is Cold Calling?</h2>
         <p>
-            Cold Calling is the practice of randomly determining which student to call on to answer a question in class. 
+            Cold Calling is the practice of randomly determining which student to call on to answer a question in class.
             Not knowing who will be called on next causes students to pay better attention.
         </p>
         <p><a class="btn btn-default" href="http://learning.subwiki.org/wiki/Cold_calling">Learn more &raquo;</a></p>
@@ -21,15 +21,24 @@
         <h2>How does Classroom Cold Caller work?</h2>
         <p>Once you choose a class to cold call, a window will pop-up.  When you click it a student's name will pop up!  Click again and you get another name.</p>
         <p>To set up your classes, you can enter the names directly or upload a list.</p>
-        <p><a class="btn btn-default" href="#">Watch a Video &raquo;</a></p>
+        <p>
+            <!--Using window.open so the linked page will open in a new window.-->
+            <a class="btn btn-default" href="https://youtu.be/8FKd2HJ_N6o" onclick="window.open(this.href); return false;">
+                Start demo &raquo;
+            </a>
+        </p>
     </div>
     <div class="col-md-4">
         <h2>Get Started!</h2>
         <p>Sign up or log in with Google or Facebook!</p>
         <p><a class="btn btn-default" href="/Account/Login">Join &raquo;</a></p>
         <p>Try it out with a demo class.</p>
-        <p><a class="btn btn-default" href="@Url.Action("ColdCallDemo", "Calling")" 
-              onclick="window.open(this.href, 'mywin', 'left=20,top=20,width=500,height=200,toolbar=1,resizable=0'); return false;">
-            Start demo &raquo;</a></p>
+        <p>
+            <!--Launches the demo ColdCall window.-->
+            <a class="btn btn-default" href="@Url.Action("ColdCallDemo", "Calling")"
+               onclick="window.open(this.href, 'mywin', 'left=20,top=20,width=500,height=200,toolbar=1,resizable=0'); return false;">
+                Start demo &raquo;
+            </a>
+        </p>
     </div>
 </div>

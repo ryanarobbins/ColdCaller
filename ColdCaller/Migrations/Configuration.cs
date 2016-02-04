@@ -10,7 +10,7 @@ namespace ColdCaller.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(ColdCaller.Models.ApplicationDbContext context)
@@ -20,7 +20,9 @@ namespace ColdCaller.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
             //
-            context.Students.AddOrUpdate(
+            //  TODO: Uncomment to initially seed the database.
+            //
+            /*context.Students.AddOrUpdate(
               p => p.Name,
               new Student { Name = "Luke Skywalker", StudentClass = "1st Period", TeacherId = "DemoTeacher" },
               new Student { Name = "Han Solo", StudentClass = "1st Period", TeacherId = "DemoTeacher" },
@@ -32,8 +34,7 @@ namespace ColdCaller.Migrations
               new Student { Name = "Paul Atreides", StudentClass = "1st Period", TeacherId = "DemoTeacher" },
               new Student { Name = "Jar Jar Binks", StudentClass = "2nd Period", TeacherId = "DemoTeacher" },
               new Student { Name = "Admiral Ackbar", StudentClass = "2nd Period", TeacherId = "DemoTeacher" }
-            );
-            
+            );*/
         }
     }
 }

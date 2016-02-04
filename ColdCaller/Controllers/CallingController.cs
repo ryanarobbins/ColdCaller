@@ -60,21 +60,23 @@ namespace ColdCaller.Controllers
             
             return View(ChosenStudents);
         }
+        
         [AllowAnonymous]
         public ActionResult ColdCallDemo()
         {
 
             ViewBag.ChosenClass = "DemoTeacher";
-            var Students = db.Students.ToList();
+            /*var Students = db.Students.ToList();
             var ChosenStudents =
                 from s in Students
                 where s.StudentClass == "1st Period" && s.TeacherId == "DemoTeacher"
                 select s;
-            
+            */
 
-            return View(ChosenStudents);
+            return View();
         }
 
+        //Returns a list of students that match the UserId and chosen class.
         private IEnumerable<Student> FilterStudents(string StudentClass) 
         {
             var userId = User.Identity.GetUserId();
@@ -87,35 +89,60 @@ namespace ColdCaller.Controllers
         
         }
         
+        // GET: Calling/JsonChosenStudents
+        // Creates a collection of the Names of the Student objects
+        // that are in the ChosenClass for the current user.
+        // Converts them to JSON and sends the JSON to the browser.
         [HttpGet]
         public ActionResult JsonChosenStudents(string ChosenClass)
         {
             var userId = User.Identity.GetUserId();
+
             var Students = db.Students.ToList();
+            
+            // Goes through the list of Students in the database and
+            // creates a collection of the Names from Students who
+            // match the StudentClass and TeacherId.
             var ChosenStudents =
                 from s in Students
                 where s.StudentClass == ChosenClass && s.TeacherId == userId
                 select new {
                     name = s.Name
                 };
+
+            // Converts the collection of names into a JsonResult and returns it.
+            // The list of names will be sent to the browser as a JSON string.
             var JsonStudents = Json(ChosenStudents, JsonRequestBehavior.AllowGet);
             return JsonStudents;
         }
+
+        // Esentially a duplicate of JsonChosenStudents that will
+        // be accessible without logging in.  It pulls records with
+        // TeacherId of DemoTeacher and StudentClass of 1st Period 
+        // that were added to the database.
         [HttpGet]
         [AllowAnonymous]
         public ActionResult JsonChosenStudentsDemo()
         {
+            // Setting up demo values
             var userId = "DemoTeacher";
+            var ChosenClass = "1st Period";
+
             var Students = db.Students.ToList();
+            
+            // This is the same code that is in JsonChosenStudents.
+            // Should be encapsulated into a reusable method.
+            //################################
             var ChosenStudents =
                 from s in Students
-                where s.StudentClass == "1st Period" && s.TeacherId == userId
+                where s.StudentClass == ChosenClass && s.TeacherId == userId
                 select new
                 {
                     name = s.Name
                 };
             var JsonStudents = Json(ChosenStudents, JsonRequestBehavior.AllowGet);
             return JsonStudents;
+            //################################
         }
     }
 }

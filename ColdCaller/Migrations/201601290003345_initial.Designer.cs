@@ -13,7 +13,7 @@ namespace ColdCaller.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201601081726098_initial"; }
+            get { return "201601290003345_initial"; }
         }
         
         string IMigrationMetadata.Source

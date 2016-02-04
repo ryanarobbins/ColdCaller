@@ -40,15 +40,15 @@ namespace ColdCaller.Controllers
         public ActionResult AddFromForm(string StudentClass, string StudentList)
         {
             ViewBag.StudentClass = StudentClass;
-            ViewBag.StudentList = StudentList;
+            //ViewBag.StudentList = StudentList;
             var TeacherId = User.Identity.GetUserId();
 
+            //Creates an array of strings that holds the names that were entered in the form.
             var parsedString = StudentList.Split(',').Select(sValue => sValue.Trim()).ToArray();
 
-            int x = parsedString.Length;
+            //int x = parsedString.Length;
 
-            //List<Student> AddedStudents = new List<Student>();
-
+            //Creates a new student for each name that was entered into the form and adds it to the database.
             foreach (string s in parsedString)
             {
                 var newStudent = new Student();
@@ -59,11 +59,7 @@ namespace ColdCaller.Controllers
             }
 
             db.SaveChanges();
-
-            //Pulls the Students that were just added back out of the database
-            //Will also pull other Students with the same Name and TeacherId
-            //AddedStudents = db.Students.Where(s => parsedString.Contains(s.Name) && s.TeacherId == TeacherId).ToList();
-
+            
             return RedirectToAction("List");
         }
 
@@ -75,31 +71,34 @@ namespace ColdCaller.Controllers
         [HttpPost]
         public ActionResult AddFromCSV(HttpPostedFileBase file)
         {
+            //###############Need to check to makes sure the file is a CSV#################
             
             if (file != null && file.ContentLength > 0)
                 try
                 {
-                    //string path = Path.Combine(Server.MapPath("~/UploadTests"),
-                    //                           Path.GetFileName(file.FileName));
-                    //file.SaveAs(path);
-
+                    //Creates a reader for the incoming file.
                     TextReader reader = new StreamReader(file.InputStream);
 
+                    //Using functions from CSVHelper package.
+                    //http://joshclose.github.io/CsvHelper/
                     var parsedCSV = new CsvReader(reader);
 
+                    //Configuration settings for CSVHelper.
+                    //MyClassMap is a class in StudentsController.cs.
                     parsedCSV.Configuration.RegisterClassMap<MyClassMap>();
                     parsedCSV.Configuration.TrimFields = true;
                     parsedCSV.Configuration.HasHeaderRecord = false;
 
+                    //Uses the map to create Student objects with values from the CSV file.
                     var AddedStudents = parsedCSV.GetRecords<Student>();
 
                     var TeacherId = User.Identity.GetUserId();
 
+                    //Sets the TeacherId for the new Students and adds them to the database.
                     foreach (var s in AddedStudents)
                     {
                         s.TeacherId = TeacherId;
                         db.Students.Add(s);
-                        //StudentsToDisplayNames.Add(s.Name);
                     }
 
                     db.SaveChanges();
@@ -116,41 +115,13 @@ namespace ColdCaller.Controllers
             }
 
             ViewBag.Message = "Success!";
-
-            //TextReader reader = new StreamReader(file.InputStream);
-            
-            //var parsedCSV = new CsvReader(reader);
-            
-            //parsedCSV.Configuration.RegisterClassMap<MyClassMap>();
-            //parsedCSV.Configuration.TrimFields = true;
-            //parsedCSV.Configuration.HasHeaderRecord = false;
-            
-            //var AddedStudents = parsedCSV.GetRecords<Student>();
-
-            //List<string> StudentsToDisplayNames = new List<string>();
-            //var TeacherId = User.Identity.GetUserId();
-
-            //foreach(var s in AddedStudents)
-            //{
-            //    s.TeacherId = TeacherId;
-            //    db.Students.Add(s);
-            //    //StudentsToDisplayNames.Add(s.Name);
-            //}
-
-            //db.SaveChanges();
-
-            //Pulls the Students that were just added from the database
-            //Will also pull Students with the same Name and TeacherId
-            //Not currently used
-            //var StudentsToDisplay = db.Students.Where(s => StudentsToDisplayNames.Contains(s.Name) && s.TeacherId == TeacherId).ToList();
-
-
-
+                        
             return RedirectToAction("List");
         }
 
 
         // GET: Students/List
+        // Need to implement paging.
         public ActionResult List()
         {
             var TeacherId = User.Identity.GetUserId();
@@ -185,6 +156,7 @@ namespace ColdCaller.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "StudentId,Name,StudentClass")] Student student)
         {
+            //The TeacherID is set to the UserId.
             if (ModelState.IsValid)
             {
                 student.TeacherId = User.Identity.GetUserId();
@@ -290,6 +262,10 @@ namespace ColdCaller.Controllers
             return RedirectToAction("List");
         }
 
+        //For use by CSVHelper functions.
+        //Specifies that the first column in the CSV maps
+        //to the same and the second column to the StudentClass
+        //of a student object.
         public sealed class MyClassMap : CsvClassMap<Student>
         {
             public MyClassMap()
@@ -300,6 +276,8 @@ namespace ColdCaller.Controllers
             }
         }
 
+        //I am probably not disposing of things properly and
+        //need work on that.
         protected override void Dispose(bool disposing)
         {
             if (disposing)

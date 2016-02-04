@@ -1,4 +1,8 @@
-﻿@model IEnumerable<ColdCaller.Models.Student>
+﻿<!--VerifyClass.cshtml is reached by choosing a class in the Calling/Index page.
+    The controller will pass a list of Students that match the chosen class
+    and the logged in teacher to this view.-->
+
+@model IEnumerable<ColdCaller.Models.Student>
 
 @{
     ViewBag.Title = "Verify Class";
@@ -6,6 +10,7 @@
 
 <h2>Are these the students you want to call?</h2>
 
+<!--Launches the ColdCall window.-->
 <a href="@Url.Action("ColdCall", "Calling", new { ViewBag.ChosenClass })" onclick="window.open(this.href, 'mywin',
 'left=20,top=20,width=500,height=200,toolbar=1,resizable=0'); return false;">Yes</a>
 
@@ -14,7 +19,7 @@
 
 <h3>@ViewBag.ChosenClass</h3>
 
-
+<!--Lists the Names from the Students that were passed to the view from the controller.-->
     <ol name="ChosenStudents">
 @foreach (var item in Model) {
    
